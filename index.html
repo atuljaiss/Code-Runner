@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeRunner</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.css">  
+    <script src="jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <div id="header">
+        <div id="logo">
+            CodeRunner
+        </div>
+        <div id="buttonContainer">
+            <div class="toggleButton active" id="html">HTML</div>
+            <div class="toggleButton" id="css">CSS</div>
+            <div class="toggleButton" id="js">JavaScript</div>
+            <div class="toggleButton active" id="output">Output</div>
+            
+        </div>
+        <div id="darkB">
+            <button id="dark">Dark</button>
+        </div>
+        
+    </div>
+    <div id="bodyContainer">
+        <textarea  id="htmlPannel" class="pannel"><p id="yo">Write Your Html Code Here</p></textarea>
+        <textarea  id="cssPannel" class="pannel hidden">p {color:red}</textarea>
+        <textarea  id="jsPannel" class="pannel hidden">document.getElementById("yo").innerHTML="Output is displayed here"</textarea>
+
+        <iframe id="outputPannel" class="pannel"></iframe>
+
+    </div>
+    <script> $(".toggleButton").hover(function(){
+        $(this).addClass("highlightedButton")
+    },function(){
+        $(this).removeClass("highlightedButton");
+    }); 
+    
+    $(".toggleButton").click( function(){
+        $(this).toggleClass("active");
+        $(this).removeClass("highlightedButton");
+        var pannelId=$(this).attr("id")+"Pannel";
+        $("#"+pannelId).toggleClass("hidden");
+        var numOfActivePannel = 4 - $('.hidden').length;
+        $(".pannel").width(($(window).width()/numOfActivePannel)-10);
+    });
+    function outputUpdate(){
+        $("iframe").contents().find("html").html("<html><head><style type='text/css'>" + $("#cssPannel").val() + "</style></head><body>" + $("#htmlPannel").val());
+            document.getElementById("outputPannel").contentWindow.eval($("#jsPannel").val());
+    };
+    $(".pannel").height($(window).height()-$("#header").height());
+    $(".pannel").width(($(window).width()/2)-10);
+    
+    outputUpdate();
+    
+    $("textarea").on('change keyup paste',function(){
+        outputUpdate();
+    });
+    $("#dark").click(function(){
+        $("textarea").toggleClass("darkTheme");
+        $("#dark").toggleClass("darkTheme");
+        $("#header").toggleClass("headerDarkTheme");
+    });</script>
+ 
+</body>
+</html>
